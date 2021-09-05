@@ -71,6 +71,10 @@ module.exports = (bot) => {
     const chatId = msg.chat.id;
     const text = msg.text;
 
+    if(msg.reply_to_message) {
+      return;
+    }
+
     const status = await Chat.getCurrentStatus(chatId);
 
     if (text.startsWith('/')) return;
@@ -125,16 +129,38 @@ module.exports = (bot) => {
     const [msg1, msg2, msg3] = parsedData;
 
     if (msg1) {
-      await bot.sendMessage(chatId, msg1.text, opts);
+      const responce = await bot.sendMessage(chatId, msg1.text, opts).then((res => {
+        bot.onReplyToMessage(chatId, res.message_id, async (msg) => {
+          const text = msg.text;
+          const userId = status.userId;
+          const result = await message.createMessage(userId, text);
+          bot.sendMessage(chatId, 'Сообщение успешно доставлено.');
+        });
+      }));
+
     }
     if (msg2) {
-      await bot.sendMessage(chatId, msg2.text, opts);
+      await bot.sendMessage(chatId, msg2.text, opts).then((res => {
+        bot.onReplyToMessage(chatId, res.message_id, async (msg) => {
+          const text = msg.text;
+          const userId = status.userId;
+          const result = await message.createMessage(userId, text);
+          bot.sendMessage(chatId, 'Сообщение успешно доставлено.');
+        });
+      }));
     }
     if (msg3) {
-      await bot.sendMessage(chatId, msg3.text, count > (status.page + 1) * PER_PAGE ? { ...opts, ...options } : opts);
+      await bot.sendMessage(chatId, msg3.text, count > (status.page + 1) * PER_PAGE ? { ...opts, ...options } : opts).then((res => {
+        bot.onReplyToMessage(chatId, res.message_id, async (msg) => {
+          const text = msg.text;
+          const userId = status.userId;
+          const result = await message.createMessage(userId, text);
+          bot.sendMessage(chatId, 'Сообщение успешно доставлено.');
+        });
+      }));
     }
 
-    if (count < (status.page + 1) * PER_PAGE) {
+    if (count <= (status.page + 1) * PER_PAGE) {
       await bot.sendMessage(chatId, 'Конец диалога', optsOnEnd);
     }
   }
