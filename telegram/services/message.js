@@ -47,7 +47,7 @@ function parse(data) {
 
   const parsedMessages = messages.map((elem, i) => {
     const time = new Date(elem.dateTime);
-    const text = `_UserId: ${elem.userId} / ${time}_\nТип сообщения: *${elem.messageType === 'ANSWER' ? 'Ответ' : 'Вопрос'}*\n\n${elem.text}`;
+    const text = `<i>UserId: ${elem.userId} / ${time}</i>\nТип сообщения: <b>${elem.messageType === 'ANSWER' ? 'Ответ' : 'Вопрос'}</b>\n\n${elem.text}`;
     return { oldText: elem.text, time: time.toLocaleString(), text };
   });
   return parsedMessages;

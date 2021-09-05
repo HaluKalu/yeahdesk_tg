@@ -118,7 +118,7 @@ module.exports = (bot) => {
     };
 
     const opts = {
-      parse_mode: 'Markdown'
+      parse_mode: 'HTML'
     };
 
     const parsedData = message.parse(result.data)
@@ -147,8 +147,6 @@ module.exports = (bot) => {
 
     await Chat.updateArchived(chatId, archived);
 
-    console.log(status);
-
     const users = responce.data.result.users;
     const allCount = responce.data.result.count;
 
@@ -166,8 +164,6 @@ module.exports = (bot) => {
         callback_data: `${ACTION.CALLBACK.getMsg}${elem}`
       }])
     });
-
-    console.log(allCount, (status.page + 1) * PER_PAGE)
 
     if (allCount > (status.page + 1) * PER_PAGE) {
       await Chat.updateStatus(chatId, 0, status.page + 1);
