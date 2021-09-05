@@ -1,6 +1,8 @@
+require('dotenv').config()
+
 const axios = require('axios').default;
 
-const url = 'http://localhost:3000';
+const url = process.env.SERVER_URL;
 
 async function getMessageByUserId(userId, page) {
   try {
